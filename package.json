@@ -1,0 +1,52 @@
+{
+  "name": "@hieuzest/koishi-plugin-analytics",
+  "description": "Fork of the official analytics plugin",
+  "version": "1.1.0",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "author": "Hieuzest",
+  "license": "AGPL-3.0",
+  "keywords": [
+    "bot",
+    "chatbot",
+    "koishi",
+    "plugin",
+    "chart",
+    "console",
+    "statistics",
+    "analytics",
+    "status"
+  ],
+  "yakumo": {
+    "client": "./build/client"
+  },
+  "koishi": {
+    "description": {
+      "en": "Show statistics for Koishi application",
+      "zh": "在控制台中显示统计数据"
+    },
+    "service": {
+      "required": [
+        "console"
+      ],
+      "optional": [
+        "database"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@koishijs/plugin-console": "^5.11.2",
+    "koishi": "^4.13.3"
+  },
+  "devDependencies": {
+    "@koishijs/assets": "^1.0.2",
+    "@koishijs/client": "^5.12.0",
+    "echarts": "^5.4.3",
+    "koishi": "^4.13.9",
+    "vue-echarts": "^6.6.0"
+  }
+}
