@@ -1,7 +1,7 @@
 {
   "name": "@hieuzest/koishi-plugin-analytics",
   "description": "Fork of the official analytics plugin",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -26,8 +26,8 @@
   },
   "koishi": {
     "description": {
-      "en": "Show statistics for Koishi application",
-      "zh": "在控制台中显示统计数据"
+      "en": "(Fork) Show statistics for Koishi application",
+      "zh": "(Fork) 在控制台中显示统计数据"
     },
     "service": {
       "required": [

@@ -36,7 +36,7 @@ class MetaProvider extends DataService<MetaProvider.Payload> {
       lastCall: 'timestamp',
     })
 
-    ctx.any().before('command/execute', ({ session }) => {
+    ctx.any().before('command/execute', ({ session }: Argv<'lastCall'>) => {
       if (!ctx.database) return
       session.user.lastCall = new Date()
     })

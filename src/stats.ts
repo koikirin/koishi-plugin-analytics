@@ -2,7 +2,6 @@ import { DataService } from '@koishijs/plugin-console'
 import { $, Bot, Channel, Context, Dict, Logger, Schema, Session, Time, valueMap } from 'koishi'
 
 declare module 'koishi' {
-  // @ts-ignore
   interface Session {
     _sendType?: 'command' | 'dialogue'
   }
@@ -68,7 +67,7 @@ class StatisticsProvider extends DataService<StatisticsProvider.Payload> {
   longterm: Record<StatisticsProvider.LongtermField, number>
 
   constructor(ctx: Context, private config: StatisticsProvider.Config = {}) {
-    super(ctx, 'stats', { authority: config.statsAuthority})
+    super(ctx, 'stats', { authority: config.statsAuthority })
 
     this.clear()
 
@@ -348,7 +347,7 @@ namespace StatisticsProvider {
 
   export const Config: Schema<Config> = Schema.object({
     statsInternal: Schema.natural().role('ms').description('统计数据推送的时间间隔。').default(Time.minute * 10),
-    statsAuthority: Schema.natural().description('接收统计数据需要的权限。').default(0)
+    statsAuthority: Schema.natural().description('接收统计数据需要的权限。').default(0),
   })
 
   export type Extension = (payload: Payload, data: StatisticsProvider.Data) => Promise<void>
