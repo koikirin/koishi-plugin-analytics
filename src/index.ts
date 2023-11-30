@@ -1,6 +1,6 @@
 import { Context, Schema } from 'koishi'
 import { resolve } from 'path'
-import {} from '@koishijs/plugin-console'
+import {} from '@koishijs/console'
 import MetaProvider from './meta'
 import StatisticsProvider from './stats'
 
@@ -13,7 +13,7 @@ declare module 'koishi' {
   }
 }
 
-declare module '@koishijs/plugin-console' {
+declare module '@koishijs/console' {
   namespace Console {
     interface Services {
       meta: MetaProvider
@@ -32,7 +32,7 @@ export * from './stats'
 
 export const filter = false
 export const name = 'status'
-export const using = ['console'] as const
+export const inject = ['console']
 
 export interface Config extends MetaProvider.Config, StatisticsProvider.Config {}
 

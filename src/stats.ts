@@ -1,5 +1,5 @@
-import { DataService } from '@koishijs/plugin-console'
-import { $, Bot, Channel, Context, Dict, Logger, Schema, Session, Time, valueMap } from 'koishi'
+import { $, Bot, Channel, Context, Dict, Logger, Schema, Session, Time, Universal, valueMap } from 'koishi'
+import { DataService } from '@koishijs/console'
 
 declare module 'koishi' {
   interface Session {
@@ -52,7 +52,7 @@ const customTag = Symbol('custom-send')
 Session.prototype.send[customTag] = send
 
 class StatisticsProvider extends DataService<StatisticsProvider.Payload> {
-  static using = ['database', 'console']
+  static inject = ['database', 'console']
 
   lastUpdate = new Date()
   updateHour = this.lastUpdate.getHours()
@@ -115,7 +115,7 @@ class StatisticsProvider extends DataService<StatisticsProvider.Payload> {
       this.hourly[session.subtype] += 1
       this.longterm.message += 1
       this.addDaily('botSend', session.sid)
-      if (session.subtype === 'group') {
+      if (!session.isDirect) {
         this.addDaily('group', session.gid)
         const record = this.guilds[session.platform] ||= {}
         record[session.guildId] = (record[session.guildId] || 0) + 1
@@ -243,26 +243,25 @@ class StatisticsProvider extends DataService<StatisticsProvider.Payload> {
 
     async function getGuildInfo(bot: Bot) {
       const { platform } = bot
-      const guilds = await bot.getGuildList()
-      for (const { guildId, guildName: name } of guilds) {
-        const id = `${platform}:${guildId}`
-        if (!messageMap[id] || !groupMap[id] || groupSet.has(id)) continue
-        groupSet.add(id)
-        const { name: oldName, assignee } = groupMap[id]
-        if (name !== oldName) updateList.push({ platform, id: guildId, name })
+      for await (const { id, name } of bot.getGuildIter()) {
+        const gid = `${platform}:${id}`
+        if (!messageMap[gid] || !groupMap[gid] || groupSet.has(gid)) continue
+        groupSet.add(gid)
+        const { name: oldName, assignee } = groupMap[gid]
+        if (name !== oldName) updateList.push({ platform, id, name })
         payload.guilds.push({
           name,
           platform,
           assignee,
-          value: messageMap[id],
-          last: data.daily[0].group[id] || 0,
+          value: messageMap[gid],
+          last: data.daily[0].group[gid] || 0,
         })
       }
     }
 
     await Promise.all(this.ctx.bots.map(async (bot) => {
-      if (bot.status !== 'online') return
-      await getGuildInfo(bot).catch(logger.warn)
+      if (bot.status !== Universal.Status.ONLINE) return
+      await getGuildInfo(bot).catch(logger.debug)
     }))
 
     for (const key in messageMap) {
